@@ -1,0 +1,30 @@
+# Configuration Upptime — status page Kotbo
+# Docs : https://upptime.js.org/docs/configuration
+
+owner: Kotbo-Bot
+repo: kotbo-status
+
+sites:
+  - name: API Kotbo
+    url: https://api.kotbo.fr/health
+  - name: Bot Discord
+    url: https://api.kotbo.fr/health/discord
+  - name: Base de données
+    url: https://api.kotbo.fr/health/db
+  - name: Redis
+    url: https://api.kotbo.fr/health/redis
+  - name: Dashboard
+    url: https://dash.kotbo.fr
+
+status-website:
+  cname: status.kotbo.fr
+  name: Kotbo Status
+  introTitle: "État des services Kotbo"
+  introMessage: Statut en temps réel du bot Discord, de l'API, du dashboard et de l'infrastructure Kotbo. Propulsé par Upptime — aucun serveur requis.
+  navbar:
+    - title: Status
+      href: /
+    - title: Dashboard
+      href: https://dash.kotbo.fr
+    - title: GitHub
+      href: https://github.com/$OWNER/$REPO
