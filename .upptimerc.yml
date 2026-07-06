@@ -4,10 +4,8 @@
 owner: Kotbo-Bot
 repo: kotbo-status
 
-# Notifications d'incident (down / recovery) vers Discord
-notifications:
-  - type: discord
-    webhook: "$DISCORD_WEBHOOK_URL"
+# Notifications Discord : gérées par le secret NOTIFICATION_DISCORD_WEBHOOK_URL
+# (Upptime lit ce secret directement, pas de config YAML nécessaire).
 
 sites:
   - name: API Kotbo
