@@ -4,6 +4,11 @@
 owner: Kotbo-Bot
 repo: kotbo-status
 
+# Notifications d'incident (down / recovery) vers Discord
+notifications:
+  - type: discord
+    webhook: "$DISCORD_WEBHOOK_URL"
+
 sites:
   - name: API Kotbo
     url: https://api.kotbo.fr/health
