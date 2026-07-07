@@ -2,7 +2,7 @@
 # Docs : https://upptime.js.org/docs/configuration
 #
 # ⚠️  Seul fichier à éditer à la main : voir AGENTS.md.
-#     Les workflows, api/, graphs/, history/ sont générés automatiquement.
+#      Les workflows, api/, graphs/, history/ sont générés automatiquement.
 
 owner: Kotbo-Bot
 repo: kotbo-status
@@ -23,6 +23,7 @@ sites:
     url: https://dash.kotbo.fr
 
 status-website:
+  faviconSvg: https://kotbo.fr/favicon.svg
   cname: status.kotbo.fr
   name: Kotbo Status
   # thème de base clair — surchargé par le bloc `css` ci-dessous (chargé après)
@@ -37,11 +38,102 @@ status-website:
     - title: GitHub
       href: https://github.com/$OWNER/$REPO
 
-  # ---- Polices Kotbo (Manrope / Inter / Caveat) ----
+  # ---- Méta Tags Custom & Polices Kotbo ----
   customHeadHtml: |
+    <meta name="description" content="Statut en temps réel du bot Discord, de l'API, du dashboard et de l'infrastructure Kotbo.">
+    <meta name="theme-color" content="#625fff">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://status.kotbo.fr/">
+    <meta property="og:title" content="Kotbo Status — État des services">
+    <meta property="og:description" content="Suivez en direct la disponibilité du bot Discord, de l'API et des infrastructures de Kotbo.">
+    <meta property="og:image" content="https://kotbo.fr/favicon.svg">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://status.kotbo.fr/">
+    <meta property="twitter:title" content="Kotbo Status — État des services">
+    <meta property="twitter:description" content="Suivez en direct la disponibilité du bot Discord, de l'API et des infrastructures de Kotbo.">
+    <meta property="twitter:image" content="https://kotbo.fr/favicon.svg">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;700;800;900&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet">
+
+  # ---- Scripts tiers ----
+  scripts:
+    - src: https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js
+      async: true
+
+  # ---- JavaScript unique (Fusionné) ----
+  js: |
+    // 1. Mode clair et sombre (Exécution immédiate pour éviter le flash blanc)
+    (function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const theme = urlParams.get('theme');
+      if (theme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+      } else if (theme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+      }
+    })();
+
+    // 2. Initialisation OneSignal Push
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    OneSignalDeferred.push(async function(OneSignal) {
+      await OneSignal.init({
+        appId: "VOTRE_APP_ID_ONESIGNAL",
+        safari_web_id: "VOTRE_SAFARI_ID",
+        notifyButton: { enable: true }
+      });
+    });
+
+    // 3. Traductions dynamiques des incidents générés par Upptime
+    (function () {
+      var rules = [
+        [/\bis down\b/gi, "est hors service"],
+        [/\bhas degraded performance\b/gi, "a des performances dégradées"],
+        [/\bis up\b/gi, "est de nouveau opérationnel"]
+      ];
+      function translate() {
+        var nodes = document.querySelectorAll("h1, h2, h3, h4");
+        for (var i = 0; i < nodes.length; i++) {
+          var el = nodes[i];
+          if (el.children.length) continue;
+          var text = el.textContent, out = text;
+          for (var j = 0; j < rules.length; j++) out = out.replace(rules[j][0], rules[j][1]);
+          if (out !== text) el.textContent = out;
+        }
+      }
+      if (document.readyState !== "loading") translate();
+      document.addEventListener("DOMContentLoaded", translate);
+      new MutationObserver(translate).observe(document.documentElement, { childList: true, subtree: true });
+    })();
+
+    // 4. API Cloudflare Status & Correctifs de langue au chargement du DOM
+    document.addEventListener("DOMContentLoaded", function() {
+      // Statut Cloudflare
+      fetch('https://www.cloudflarestatus.com/api/v2/status.json')
+        .then(response => response.json())
+        .then(data => {
+          if (data.status.indicator !== "none") {
+            const warning = document.createElement("div");
+            warning.className = "card";
+            warning.style = "margin-top: 20px; border-left: 4px solid #f1c40f; padding: 15px;";
+            warning.innerHTML = `<strong>Note infra :</strong> Cloudflare signale des perturbations (Statut : ${data.status.description}). Cela peut impacter nos services.`;
+            document.querySelector("main").prepend(warning);
+          }
+        });
+
+      // Forcer l'anglais si besoin
+      if (!navigator.language.startsWith('fr')) {
+        const title = document.querySelector("h1");
+        if (title && title.innerText === "Statut du système") {
+          title.innerText = "System Status";
+        }
+      }
+    });
 
   # ---- Habillage « whiteboard / post-it » (style kotbo.fr) ----
   css: |
@@ -317,36 +409,11 @@ status-website:
       form.f.r { width: 100%; margin-top: 0.5rem; }
     }
 
-  # ---- Traductions dynamiques : titres d'incidents générés par Upptime ----
-  # (« X is down » est codé en dur côté Upptime ; on le francise à l'affichage)
-  js: |
-    (function () {
-      var rules = [
-        [/\bis down\b/gi, "est hors service"],
-        [/\bhas degraded performance\b/gi, "a des performances dégradées"],
-        [/\bis up\b/gi, "est de nouveau opérationnel"]
-      ];
-      function translate() {
-        var nodes = document.querySelectorAll("h1, h2, h3, h4");
-        for (var i = 0; i < nodes.length; i++) {
-          var el = nodes[i];
-          if (el.children.length) continue;
-          var text = el.textContent, out = text;
-          for (var j = 0; j < rules.length; j++) out = out.replace(rules[j][0], rules[j][1]);
-          if (out !== text) el.textContent = out;
-        }
-      }
-      if (document.readyState !== "loading") translate();
-      document.addEventListener("DOMContentLoaded", translate);
-      new MutationObserver(translate).observe(document.documentElement, { childList: true, subtree: true });
-    })();
-
 # ---- Couleurs de marque pour le graphique Chart.js de la page historique ----
 graphBorderColor: "#625fff"
 graphBackgroundColor: "rgba(98, 95, 255, 0.14)"
 
-# ---- Traductions françaises de l'interface (racine, pas sous status-website) ----
-# Conserver les jetons $UPTIME, $TIME, $MINUTES, $POSTS, $NUMBER, $DATE, $DURATION, $REPO.
+# ---- Traductions françaises de l'interface (racine) ----
 i18n:
   locale: fr-FR
   liveStatus: État en direct
@@ -360,7 +427,7 @@ i18n:
   overallUptimeTitle: Disponibilité globale
   averageResponseTime: "Temps de réponse moyen : $TIMEms"
   averageResponseTimeTitle: Temps de réponse moyen
-  sevelDayResponseTime: Temps de réponse sur 7 jours
+  sevenDayResponseTime: Temps de réponse sur 7 jours
   responseTimeMs: Temps de réponse (ms)
   up: Opérationnel
   down: Hors service
