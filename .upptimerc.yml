@@ -166,19 +166,49 @@ status-website:
       font-weight: 700 !important;
     }
 
-    /* cartes de service (live status) */
+    /* cartes de service (live status) : fiches post-it */
     section.live-status article {
       background: #fff !important;
       border: 1.5px solid var(--k-line) !important;
       border-left-width: 1.5px !important;
-      border-radius: 18px !important;
+      border-radius: 14px !important;
       padding: 1.1rem 1.3rem !important;
+      margin-top: 0.95rem !important;
       box-shadow: 0 3px 0 rgba(20, 22, 28, 0.05), 0 10px 22px -12px rgba(20, 22, 28, 0.18);
+      transform: rotate(-0.45deg);
       transition: transform 0.15s, box-shadow 0.15s;
     }
+    section.live-status article:nth-child(even) { transform: rotate(0.5deg); }
+    section.live-status article:nth-child(3n) { transform: rotate(-0.2deg); }
     section.live-status article:hover {
-      transform: translateY(-2px);
+      transform: rotate(0deg) translateY(-2px);
       box-shadow: 0 4px 0 rgba(20, 22, 28, 0.06), 0 16px 30px -14px rgba(20, 22, 28, 0.28);
+    }
+    /* graphique de temps de réponse en filigrane teinté marque */
+    section.live-status article.graph::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: var(--background);
+      background-size: auto 62%;
+      background-repeat: no-repeat;
+      background-position: right -0.4rem bottom -0.2rem;
+      filter: hue-rotate(78deg) saturate(0.95);
+      opacity: 0.5;
+      pointer-events: none;
+      z-index: 0;
+    }
+    section.live-status article > * { position: relative; z-index: 1; }
+    /* petit scotch en haut à gauche */
+    section.live-status article::before {
+      content: "";
+      position: absolute;
+      top: -0.5rem; left: 1.3rem;
+      width: 2.8rem; height: 1.05rem;
+      transform: rotate(-4deg);
+      background: rgba(98, 95, 255, 0.16);
+      border: 1px solid rgba(98, 95, 255, 0.14);
+      z-index: 2;
     }
     section.live-status article h4 .icon { display: none; }
     section.live-status article h4 {
@@ -286,6 +316,34 @@ status-website:
       header h1 { font-size: 2rem !important; }
       form.f.r { width: 100%; margin-top: 0.5rem; }
     }
+
+  # ---- Traductions dynamiques : titres d'incidents générés par Upptime ----
+  # (« X is down » est codé en dur côté Upptime ; on le francise à l'affichage)
+  js: |
+    (function () {
+      var rules = [
+        [/\bis down\b/gi, "est hors service"],
+        [/\bhas degraded performance\b/gi, "a des performances dégradées"],
+        [/\bis up\b/gi, "est de nouveau opérationnel"]
+      ];
+      function translate() {
+        var nodes = document.querySelectorAll("h1, h2, h3, h4");
+        for (var i = 0; i < nodes.length; i++) {
+          var el = nodes[i];
+          if (el.children.length) continue;
+          var text = el.textContent, out = text;
+          for (var j = 0; j < rules.length; j++) out = out.replace(rules[j][0], rules[j][1]);
+          if (out !== text) el.textContent = out;
+        }
+      }
+      if (document.readyState !== "loading") translate();
+      document.addEventListener("DOMContentLoaded", translate);
+      new MutationObserver(translate).observe(document.documentElement, { childList: true, subtree: true });
+    })();
+
+# ---- Couleurs de marque pour le graphique Chart.js de la page historique ----
+graphBorderColor: "#625fff"
+graphBackgroundColor: "rgba(98, 95, 255, 0.14)"
 
 # ---- Traductions françaises de l'interface (racine, pas sous status-website) ----
 # Conserver les jetons $UPTIME, $TIME, $MINUTES, $POSTS, $NUMBER, $DATE, $DURATION, $REPO.
