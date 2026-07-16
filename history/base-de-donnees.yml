@@ -1,7 +1,7 @@
 url: https://api.kotbo.fr/health/db
-status: down
-code: 503
-responseTime: 3569
-lastUpdated: 2026-07-16T22:17:29.705Z
+status: up
+code: 200
+responseTime: 441
+lastUpdated: 2026-07-16T23:51:26.974Z
 startTime: 2026-07-06T23:11:10.327Z
 generator: Upptime <https://github.com/upptime/upptime>
