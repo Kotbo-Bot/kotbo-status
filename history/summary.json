@@ -4,22 +4,23 @@
     "url": "https://api.kotbo.fr/health",
     "icon": "https://icons.duckduckgo.com/ip3/api.kotbo.fr.ico",
     "slug": "api-kotbo",
-    "status": "up",
+    "status": "down",
     "uptime": "99.82%",
-    "uptimeDay": "100.00%",
-    "uptimeWeek": "100.00%",
+    "uptimeDay": "99.96%",
+    "uptimeWeek": "99.99%",
     "uptimeMonth": "100.00%",
     "uptimeYear": "99.82%",
-    "time": 614,
-    "timeDay": 413,
-    "timeWeek": 552,
-    "timeMonth": 550,
-    "timeYear": 614,
+    "time": 609,
+    "timeDay": 381,
+    "timeWeek": 526,
+    "timeMonth": 544,
+    "timeYear": 609,
     "dailyMinutesDown": {
       "2026-07-06": 22,
       "2026-07-10": 10,
       "2026-07-15": 18,
-      "2026-07-16": 64
+      "2026-07-16": 64,
+      "2026-08-19": 1
     }
   },
   {
@@ -27,21 +28,22 @@
     "url": "https://api.kotbo.fr/health/discord",
     "icon": "https://icons.duckduckgo.com/ip3/api.kotbo.fr.ico",
     "slug": "bot-discord",
-    "status": "up",
+    "status": "down",
     "uptime": "99.92%",
-    "uptimeDay": "100.00%",
+    "uptimeDay": "99.97%",
     "uptimeWeek": "100.00%",
     "uptimeMonth": "100.00%",
     "uptimeYear": "99.92%",
     "time": 399,
-    "timeDay": 312,
-    "timeWeek": 426,
-    "timeMonth": 420,
+    "timeDay": 333,
+    "timeWeek": 417,
+    "timeMonth": 418,
     "timeYear": 399,
     "dailyMinutesDown": {
       "2026-07-06": 22,
       "2026-07-10": 9,
-      "2026-07-15": 18
+      "2026-07-15": 18,
+      "2026-08-19": 0
     }
   },
   {
