@@ -1,7 +1,7 @@
 url: https://api.kotbo.fr/health/discord
-status: down
-code: 502
-responseTime: 353
-lastUpdated: 2026-08-19T13:59:50.528Z
+status: up
+code: 200
+responseTime: 473
+lastUpdated: 2026-08-19T14:04:05.422Z
 startTime: 2026-07-06T23:11:09.587Z
 generator: Upptime <https://github.com/upptime/upptime>
