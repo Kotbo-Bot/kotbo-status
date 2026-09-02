@@ -1,7 +1,7 @@
 url: https://api.kotbo.fr/health/redis
 status: up
 code: 200
-responseTime: 418
-lastUpdated: 2026-09-01T01:31:03.995Z
+responseTime: 555
+lastUpdated: 2026-09-02T00:40:53.835Z
 startTime: 2026-07-06T23:11:10.911Z
 generator: Upptime <https://github.com/upptime/upptime>
